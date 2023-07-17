@@ -40,23 +40,13 @@ def group(label):
 
 
 class TransitionProfile:
-    def __init__(self, ground_states, excited_states, transitions, wavelengths, gamma):
+    def __init__(self, ground_states, excited_states, transitions, frequencies, gamma):
         from scipy.constants import c
 
         self.ground_states = ground_states  # ground state labels
         self.excited_states = excited_states  # excited state labels
         self.gamma = gamma  # decay rate, w/o 2 \pi
-
-        all_possible_groups = [TransitionGroupLabel(g.hyperfine, e.hyperfine) for g, e in itertools.product(
-            ground_states, excited_states)]
-
-        for k in all_possible_groups:
-            assert k in wavelengths.keys(), \
-                    f"Unspecified transition frequency for {k}"
-
-        self.wavelengths = wavelengths  # wave length for each base transition group
-
-        self.frequencies = { k: c / wl for k, wl in wavelengths.items() }
+        self.frequencies = frequencies # Hz, w/o 2 \pi
 
         # All transition strengths are normalized to make those a
         # excited states sums to 1.
@@ -93,7 +83,7 @@ class TransitionProfile:
         for exc_state, trans in exc_to_gnd_trans.items():
             _strength_sum = sum([t.strength for t in trans])
             assert strength_sum is None or strength_sum == _strength_sum, \
-                    "Inconsistent transition strength."  # see above comment
+                    f"Inconsistent transition strength related to {exc_state}."  # see above comment
             strength_sum = _strength_sum
 
             new_trans = []

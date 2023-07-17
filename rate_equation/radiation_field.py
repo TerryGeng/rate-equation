@@ -1,19 +1,15 @@
 import numpy as np
 from collections import namedtuple
 
-RadiationField = namedtuple("RadiationField", ["wavelength", "detuning", "delta_m", "normalized_intensity"])
+RadiationField = namedtuple("RadiationField", ["frequency", "delta_m", "normalized_intensity"])
 
 
 # some utilities
 
-def wavelength_detuned_by_hz(base_wavelength, *hz_args):
+def frequency(base_wavelength):
     from scipy.constants import c
 
-    f0 = c / base_wavelength
-
-    f = f0 + sum([c / hz for hz in hz_args])
-
-    return c / f
+    return c / base_wavelength
 
 
 class RadiationFieldProfile:
@@ -32,7 +28,7 @@ class RadiationFieldProfile:
             if field.delta_m != delta_m:
                 continue
 
-            field_freq = c / field.wavelength + field.detuning
+            field_freq = field.frequency
 
             det = base_frequency - field_freq
 

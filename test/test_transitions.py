@@ -25,8 +25,8 @@ class TestTransitions:
                     transition("G2", "E2",   20),
                     transition("G2", "E3",   60),
                     ],
-                wavelengths={
-                    group("G->E"): 780.241209686e-9
+                frequencies={
+                    group("G->E"): 384.2304844685e12
                     },
                 gamma=6.0666e6
                 )
