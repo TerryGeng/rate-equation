@@ -32,7 +32,7 @@ class RadiationFieldProfile:
 
             det = base_frequency - field_freq
 
-            det += sum([ det.get_detuning(transition.ground_state, transition.excited_state) \
+            det += sum([ det.get_detuning(field_freq, transition.ground_state, transition.excited_state) \
                     for det in detunings ])
 
             i_sat_ratio = field.normalized_intensity

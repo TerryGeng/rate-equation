@@ -13,15 +13,14 @@ class TestDetuning:
                 )
 
         # This particular number is grabbed from PhysRevLett.48.596 p.598
-        assert round(det.get_detuning(state("G2"), state("E3")) / 1e6) == 840
+        assert round(det.get_detuning(None, state("G2"), state("E3")) / 1e6) == 840
 
     def test_doppler(self):
         det = DopplerDetuning(
-                wavelength=589.158e-9,
                 velocity=-1000
                 )
 
         # This particular number is grabbed from PhysRevLett.48.596 p.597
-        assert round(det.get_detuning(state("G2"), state("E3")) / 1e6) == 1697
+        assert round(det.get_detuning(508.3331958e12, state("G2"), state("E3")) / 1e6) == 1696
 
 

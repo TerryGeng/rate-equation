@@ -44,8 +44,7 @@ class TestTransitions:
 
         trans = self._create_87Rb_trans()
         fields = RadiationFieldProfile([ RadiationField(
-            wavelength=780.241209686e-9,
-            detuning=0,
+            frequency=384.2304844685e12,
             delta_m=+1,
             normalized_intensity=1
             ) ])
