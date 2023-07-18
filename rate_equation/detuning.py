@@ -31,6 +31,8 @@ class DopplerDetuning(Detuning):
         self.velocity = velocity
 
     def get_detuning(self, field_freq, ground_state, excited_state):
-        # opposite direction light creates positive detuning
+        # opposite direction (v<0) light creates positive shift in atomic resonance frequency
         from scipy.constants import c
-        return -1 * field_freq / c * self.velocity
+
+        # positive shift in resonance frequency <=> negative shift in laser frequency it sees
+        return field_freq / c * self.velocity

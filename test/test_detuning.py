@@ -21,6 +21,6 @@ class TestDetuning:
                 )
 
         # This particular number is grabbed from PhysRevLett.48.596 p.597
-        assert round(det.get_detuning(508.3331958e12, state("G2"), state("E3")) / 1e6) == 1696
+        assert round(det.get_detuning(508.3331958e12, state("G2"), state("E3")) / 1e6) == -1696
 
 
