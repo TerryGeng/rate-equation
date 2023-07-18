@@ -16,13 +16,13 @@ class RadiationFieldProfile:
     def __init__(self, fields):
         self.fields = fields
 
-    def get_effective_intensity(self, transition, base_frequency, detunings, gamma):
+    def get_effective_scattering_rate(self, transition, base_frequency, detunings, gamma):
         from scipy.constants import c
 
         group = transition.group
         delta_m = transition.delta_m
 
-        tot_int = 0
+        tot_Gamma_p = 0
 
         for field in self.fields:
             if field.delta_m != delta_m:
@@ -37,7 +37,7 @@ class RadiationFieldProfile:
 
             i_sat_ratio = field.normalized_intensity
 
-            tot_int += np.pi * gamma * i_sat_ratio / (1 + i_sat_ratio + (2*det / gamma)**2)
+            tot_Gamma_p += np.pi * gamma * i_sat_ratio / (1 + i_sat_ratio + (2*det / gamma)**2)
 
-        return tot_int
+        return tot_Gamma_p
 

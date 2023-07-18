@@ -1,5 +1,6 @@
 import itertools
 import numpy as np
+from scipy.linalg import null_space
 
 from rate_equation.transition_profile import Transition, TransitionProfile
 from rate_equation.radiation_field import RadiationField
@@ -40,14 +41,13 @@ class RateEquation:
 
         for g_to_e in e_to_all_gs:
             base_freq = self.trans_profile.frequencies[g_to_e.group]
-            tot_int = self.radiation.get_effective_intensity(g_to_e,
-                                                             base_freq,
-                                                             self.detunings,
-                                                             self.trans_profile.gamma)
-            terms[g_to_e.ground_state] = tot_int * g_to_e.strength
+            tot_Gamma_p = self.radiation.get_effective_scattering_rate(g_to_e,
+                                                                       base_freq,
+                                                                       self.detunings,
+                                                                       self.trans_profile.gamma)
+            terms[g_to_e.ground_state] = tot_Gamma_p * g_to_e.strength
 
         return terms
-
 
     def calculate_matrix_element(self, gs1, gs2):
         # d/dt Gn = In - Out
@@ -76,3 +76,31 @@ class RateEquation:
                 _out += pump * (1 - g_to_e.strength)
 
             return -1 * _out
+
+    def calculate_static_state_population(self):
+        mat = self.build_matrix()
+
+        equlb = null_space(mat)
+        equlb = equlb / np.sum(equlb)
+
+        return equlb.flatten()
+
+    def calculate_force(self, ground_state_population):
+        from scipy.constants import h, c
+        ground_states = self.trans_profile.ground_states
+
+        force = 0
+
+        for gs, popu in zip(ground_states, ground_state_population):
+            g_to_all_es = self.trans_profile.get_gnd_to_exc(gs)
+
+            for g_to_e in g_to_all_es:
+                base_freq = self.trans_profile.frequencies[g_to_e.group]
+                tot_Gamma_p = self.radiation.get_effective_scattering_rate(g_to_e,
+                                                                           base_freq,
+                                                                           self.detunings,
+                                                                           self.trans_profile.gamma)
+
+                force += popu * h * base_freq / c * tot_Gamma_p
+
+        return force
